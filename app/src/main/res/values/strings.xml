@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">MyCarLocation</string>
+    <string name="title_activity_hystory">Hystory</string>
+</resources>

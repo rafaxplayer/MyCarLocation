@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="toolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColorSecondary">@color/textTittle</item>
+        <item name="android:textColorPrimary">@color/textTittle</item>
+        <item name="android:textColor">@color/textTittle</item>
+
+    </style>
+    <style name="NavigationViewTheme" parent="AppTheme">
+        <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
+    </style>
+</resources>
