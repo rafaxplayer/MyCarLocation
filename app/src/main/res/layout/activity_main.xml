@@ -20,18 +20,6 @@
 
             <include layout="@layout/toolbar" />
 
-
-            <AutoCompleteTextView
-                android:id="@+id/autoCompleteTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:hint="Search text"
-                android:padding="15dp"
-                android:textColor="@color/DarkGrey"
-                android:textColorHint="@color/LigthGrey" />
-
-
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/map"
@@ -46,14 +34,14 @@
             android:id="@+id/buttonAddMarker"
             android:layout_width="@dimen/size_fab"
             android:layout_height="@dimen/size_fab"
-
             android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="90dp"
+            android:layout_marginRight="@dimen/fab_margin_right"
             android:onClick="onclick"
             android:src="@drawable/ic_action_placepicker"
             app:borderWidth="0dp"
             app:elevation="@dimen/fab_elevation"
             app:layout_anchor="@id/map"
+
             app:layout_anchorGravity="bottom|right"
             app:pressedTranslationZ="12dp" />
 
@@ -62,6 +50,7 @@
             android:layout_width="@dimen/size_fab"
             android:layout_height="@dimen/size_fab"
             android:layout_marginBottom="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
             android:onClick="onclick"
             android:src="@drawable/ic_clear_normal"
             app:backgroundTint="@color/colorPrimary"
@@ -80,6 +69,6 @@
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/header_navigation_drawer"
         app:menu="@menu/nav_menu"
-        app:theme="@style/NavigationViewTheme"/>
+        app:theme="@style/NavigationViewTheme" />
 
 </android.support.v4.widget.DrawerLayout>
