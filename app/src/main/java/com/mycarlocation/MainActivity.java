@@ -1,6 +1,7 @@
 package com.mycarlocation;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -16,10 +17,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.cocosw.bottomsheet.BottomSheet;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private DrawerLayout drawerLayout;
     private Marker marker;
     private ProgressBar loadprogress;
+    private SupportMapFragment mapFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +67,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         setNavigatorDrawner(navigationView);
         setToolBar(this, toolbar);
-        loadprogress=(ProgressBar) findViewById(R.id.progressLoad);
+        loadprogress = (ProgressBar) findViewById(R.id.progressLoad);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
@@ -91,8 +94,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             String strAdress = getLocationString(getApplicationContext(), latitud, longitud);
             Marker marker = mostrarMarcador(getApplicationContext(), map, latitud, longitud, strAdress, false, R.drawable.ic_location_car);
             this.marker = marker;
-        } else if (v.getId() == R.id.buttonRemoveMarker) {
-            limpiarMapa(map);
 
         }
 
@@ -113,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng, 13));
         }
         this.map = map;
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                markerMenuCreate(marker);
+            }
+        });
 
     }
 
@@ -184,6 +191,54 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         super.onStop();
     }
 
+    private void markerMenuCreate(final Marker marker) {
+        new BottomSheet.Builder(this)
+                .title(getString(R.string.actions_marker))
+                .sheet(R.menu.menu_action_marker)
+                .listener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case R.id.share_location:
+                                if (marker != null) {
+                                    dialog.dismiss();
+                                    LatLng loc = marker.getPosition();
+
+                                    String uri = "http://maps.google.com/?saddr=" + loc.latitude
+                                            + "," + loc.longitude;
+                                    shareLocationMenuCreate(uri);
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "No hay posiciones guardadas", Toast.LENGTH_LONG).show();
+                                }
+
+                                break;
+                            case R.id.delete_location:
+                                limpiarMapa(map);
+                                break;
+                            case R.id.navigator_use:
+                                if (marker != null) {
+                                    LatLng loc = marker.getPosition();
+                                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                            Uri.parse("http://maps.google.com/maps?saddr=" + map.getMyLocation().getLatitude() + "," + map.getMyLocation().getLongitude() + "&daddr=" + loc.latitude + "," + loc.longitude));
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(getApplicationContext(),
+                                            "No hay posiciones guardadas", Toast.LENGTH_LONG).show();
+                                }
+                                break;
+                        }
+                    }
+                }).show();
+    }
+
+    private void shareLocationMenuCreate(String text) {
+        final Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+        BottomSheetHelper.shareAction(this, shareIntent).title("Compatir con :").show();
+
+    }
 
     private void setNavigatorDrawner(NavigationView nav) {
         if (nav != null) {
@@ -215,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         LatLng source = new LatLng(map.getMyLocation().getLatitude(), map.getMyLocation().getLongitude());
                                         updateLocation(marker.getPosition(), map, 19, 45, 60);
                                         String url = getDirectionsUrl(source, marker.getPosition());
-                                        DownloadUrlTask downloadTask = new DownloadUrlTask(MainActivity.this, map,loadprogress);
+                                        DownloadUrlTask downloadTask = new DownloadUrlTask(MainActivity.this, map, loadprogress);
 
                                         downloadTask.execute(url);
 

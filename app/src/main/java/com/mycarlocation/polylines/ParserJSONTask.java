@@ -76,7 +76,7 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
 
             lineOptions.addAll(points);
             lineOptions.width(5);
-            lineOptions.color(R.color.colorPolylines);
+            lineOptions.color(R.color.colorAccent);
             lineOptions.geodesic(true);
 
         }
@@ -84,7 +84,7 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
         // Drawing polyline in the Google Map for the i-th route
         map.addPolyline(lineOptions);
         if(prog!=null){
-            //prog.setVisibility(View.GONE);
+            prog.setVisibility(View.GONE);
         }
     }
 }

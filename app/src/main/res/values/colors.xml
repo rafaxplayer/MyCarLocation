@@ -3,9 +3,8 @@
     <color name="colorPrimaryDark">#520304</color>
     <color name="colorPrimary">#bd0504</color>
     <color name="colorBackground">#f0ebff</color>
-    <color name="colorAccent">#040eb1</color>
+    <color name="colorAccent">#242ce5</color>
     <color name="textTittle">#B0C4DE</color>
-    <color name="colorPolylines">#5569f4</color>
     <color name="DarkGrey">#49484b</color>
     <color name="LigthGrey">#7e7d80</color>
 </resources>

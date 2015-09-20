@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MyCarLocation</string>
     <string name="title_activity_hystory">Hystory</string>
+    <string name="actions_marker">Actions marker</string>
+    <string name="share_location">Share Car Location</string>
+    <string name="delete_location">Delete Location</string>
+    <string name="use_navigator">Use Navigator</string>
 </resources>

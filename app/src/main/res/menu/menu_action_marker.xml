@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/share_location"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_location" />
+
+    <item
+        android:id="@+id/navigator_use"
+        android:icon="@drawable/ic_navigator"
+        android:title="@string/use_navigator" />
+    <item
+        android:id="@+id/delete_location"
+        android:icon="@drawable/ic_delete"
+        android:title="@string/delete_location" />
+</menu>

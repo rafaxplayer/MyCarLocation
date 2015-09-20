@@ -35,30 +35,15 @@
             android:layout_width="@dimen/size_fab"
             android:layout_height="@dimen/size_fab"
             android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin_right"
             android:onClick="onclick"
-            android:src="@drawable/ic_action_placepicker"
+            android:src="@drawable/ic_car_map"
             app:borderWidth="0dp"
             app:elevation="@dimen/fab_elevation"
             app:layout_anchor="@id/map"
-
-            app:layout_anchorGravity="bottom|right"
+            app:layout_anchorGravity="bottom|center"
             app:pressedTranslationZ="12dp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/buttonRemoveMarker"
-            android:layout_width="@dimen/size_fab"
-            android:layout_height="@dimen/size_fab"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:onClick="onclick"
-            android:src="@drawable/ic_clear_normal"
-            app:backgroundTint="@color/colorPrimary"
-            app:borderWidth="0dp"
-            app:elevation="@dimen/fab_elevation"
-            app:layout_anchor="@id/map"
-            app:layout_anchorGravity="bottom|right|end"
-            app:pressedTranslationZ="12dp" />
+
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView

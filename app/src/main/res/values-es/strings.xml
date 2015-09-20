@@ -2,4 +2,8 @@
 <resources>
     <string name="app_name">MyCarLocation</string>
     <string name="title_activity_hystory">Historial</string>
+    <string name="actions_marker">Acciones para el marcador</string>
+    <string name="share_location">Compartir Ubicación</string>
+    <string name="delete_location">Eliminar Localización</string>
+    <string name="use_navigator">Usar Navegador</string>
 </resources>

@@ -8,8 +8,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowBackground">@color/colorBackground</item>
-
-
+        <item name="bottomSheetStyle">@style/BottomSheet.StyleDialog</item>
     </style>
 
 
