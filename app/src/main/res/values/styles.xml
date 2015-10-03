@@ -13,6 +13,7 @@
     <style name="BottomSheet.StyleDialog" parent="BottomSheet.Dialog">
         <item name="android:backgroundDimAmount">0.5</item>
         <item name="android:windowAnimationStyle">@style/BottomSheet.Animation</item>
+        <item name="android:textColorPrimary">@color/DarkGrey</item>
         <!--<item name="android:textColorHint">#b8915f23</item>-->
         <item name="bs_dialogBackground">@color/colorBackground</item>
         <item name="bs_dividerColor">@color/bs_divider_color</item>

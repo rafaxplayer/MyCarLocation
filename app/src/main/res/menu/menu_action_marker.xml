@@ -7,7 +7,7 @@
 
     <item
         android:id="@+id/navigator_use"
-        android:icon="@drawable/ic_navigator"
+        android:icon="@drawable/ic_navigation"
         android:title="@string/use_navigator" />
     <item
         android:id="@+id/delete_location"

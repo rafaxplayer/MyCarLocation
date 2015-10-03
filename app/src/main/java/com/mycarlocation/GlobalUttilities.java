@@ -30,6 +30,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 // global uttilities
@@ -89,20 +90,7 @@ public class GlobalUttilities {
     }
 
 
-    public static Marker addmaker(LatLng latlong, GoogleMap map, String adress, String title, int ico) {
-        Marker marker = null;
-        try {
-            marker = map.addMarker(new MarkerOptions()
-                    .position(latlong)
-                    .icon(BitmapDescriptorFactory.fromResource(ico))
-                    .snippet(adress)
-                    .title(title));
-        } catch (Exception ex) {
-            Log.d(TAG, ex.getMessage());
-        }
 
-        return marker;
-    }
 
     public static Marker mostrarMarcador(Context con, GoogleMap map, double lat, double lng, String adress, boolean registered, int ico) {
        Marker marker=null;
@@ -192,6 +180,16 @@ public class GlobalUttilities {
         }
 
     }
+    public static String getDate() {
+        Calendar cal = Calendar.getInstance();
 
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH)+1;
+        int hour = cal.get(Calendar.HOUR);
+        int min = cal.get(Calendar.MINUTE);
+        int sec = cal.get(Calendar.SECOND);
+        return day + "/" + month + "/" + year+" "+hour+":"+min+":"+sec;
+    }
 
 }

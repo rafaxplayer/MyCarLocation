@@ -1,6 +1,5 @@
 package com.mycarlocation.polylines;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -20,10 +19,11 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
 
     private GoogleMap map;
     private ProgressBar prog;
+
     // Parsing the data in non-ui thread
-    public ParserJSONTask(GoogleMap map,ProgressBar pro) {
+    public ParserJSONTask(GoogleMap map, ProgressBar pro) {
         pro.setVisibility(View.VISIBLE);
-        this.prog=pro;
+        this.prog = pro;
         this.map = map;
     }
 
@@ -43,7 +43,6 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
             jObject = new JSONObject(jsonData[0]);
             DirectionsJSONParser parser = new DirectionsJSONParser();
 
-            // Starts parsing data
             routes = parser.parse(jObject);
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,21 +50,17 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
         return routes;
     }
 
-    // Executes in UI thread, after the parsing process
     @Override
     protected void onPostExecute(List<List<HashMap<String, String>>> result) {
         ArrayList<LatLng> points = null;
         PolylineOptions lineOptions = null;
 
-        // Traversing through all the routes
         for (int i = 0; i < result.size(); i++) {
             points = new ArrayList<LatLng>();
             lineOptions = new PolylineOptions();
 
-            // Fetching i-th route
             List<HashMap<String, String>> path = result.get(i);
 
-            // Fetching all the points in i-th route
             for (int j = 0; j < path.size(); j++) {
                 HashMap<String, String> point = path.get(j);
                 double lat = Double.parseDouble(point.get("lat"));
@@ -80,10 +75,11 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
             lineOptions.geodesic(true);
 
         }
+        if (lineOptions != null) {
+            map.addPolyline(lineOptions);
+        }
 
-        // Drawing polyline in the Google Map for the i-th route
-        map.addPolyline(lineOptions);
-        if(prog!=null){
+        if (prog != null) {
             prog.setVisibility(View.GONE);
         }
     }

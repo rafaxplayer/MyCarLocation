@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
+import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
@@ -33,9 +34,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.mycarlocation.database.DBHelper;
 import com.mycarlocation.polylines.DownloadUrlTask;
 
 import static com.mycarlocation.GlobalUttilities.buildAlertMessageNoGps;
+import static com.mycarlocation.GlobalUttilities.getDate;
 import static com.mycarlocation.GlobalUttilities.getDirectionsUrl;
 import static com.mycarlocation.GlobalUttilities.getLocationString;
 import static com.mycarlocation.GlobalUttilities.limpiarMapa;
@@ -55,13 +58,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Marker marker;
     private ProgressBar loadprogress;
     private SupportMapFragment mapFragment;
-
+    private DBHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
+        Firebase.setAndroidContext(this);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
+        db = new DBHelper(getApplicationContext(), DBHelper.TABLE_NAME, null, 1);
     }
 
     public void onclick(View v) {
@@ -94,7 +97,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             String strAdress = getLocationString(getApplicationContext(), latitud, longitud);
             Marker marker = mostrarMarcador(getApplicationContext(), map, latitud, longitud, strAdress, false, R.drawable.ic_location_car);
             this.marker = marker;
-
+            LatLng loc=marker.getPosition();
+            boolean ret = db.insertLocation(String.valueOf(loc.latitude),String.valueOf(loc.longitude), getDate(),getLocationString(this,loc.latitude, loc.longitude));
+            if(ret)
+                Toast.makeText(getApplicationContext(), "ok saved!", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -149,10 +155,18 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
+        if(db==null)
+            db = new DBHelper(getApplicationContext(), DBHelper.TABLE_NAME, null, 1);
         ocultateclado(this);
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(db!=null)
+            db.close();
+    }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
