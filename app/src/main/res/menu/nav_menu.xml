@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
+    <group >
         <item
             android:id="@+id/nav_history"
             android:icon="@drawable/ic_history"
@@ -13,6 +13,5 @@
             android:id="@+id/nav_navigator"
             android:icon="@drawable/ic_navigator"
             android:title="Usar Navegador" />
-        ...
     </group>
 </menu>

@@ -6,4 +6,7 @@
     <string name="share_location">Compartir Ubicación</string>
     <string name="delete_location">Eliminar Localización</string>
     <string name="use_navigator">Usar Navegador</string>
+    <string name="location">Localización</string>
+    <string name="question_save_location">Quieres guardar la localizacion de su vehiculo en este punto?</string>
+    <string name="touch_remove">Desplazar derecha para eliminar entradas</string>
 </resources>

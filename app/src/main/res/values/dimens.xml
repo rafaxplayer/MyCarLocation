@@ -7,5 +7,6 @@
     <dimen name="fab_elevation">4dp</dimen>
     <dimen name="header_left_padding">16dp</dimen>
     <dimen name="header_height">140dp</dimen>
-    <dimen name="perfil_image_size">64dp</dimen>
+    <dimen name="perfil_image_size">80dp</dimen>
+    <dimen name="image_touch_size">80dp</dimen>
 </resources>

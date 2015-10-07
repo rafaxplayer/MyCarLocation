@@ -6,7 +6,7 @@
         <item name="android:textColorPrimary">@color/textTittle</item>
         <item name="android:textColor">@color/textTittle</item>
 
-    </style>
+    </style>-->
     <style name="NavigationViewTheme" parent="AppTheme">
         <item name="textAppearanceListItem">@style/TextAppearance.AppCompat.Body2</item>
     </style>
@@ -24,5 +24,7 @@
         <item name="android:listSelector">@drawable/bs_list_selector</item>
         <item name="android:layoutAnimation">@anim/bs_list_layout_fade_in</item>
     </style>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

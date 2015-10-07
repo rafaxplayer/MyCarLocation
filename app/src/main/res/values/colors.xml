@@ -4,9 +4,11 @@
     <color name="colorPrimary">#bd0504</color>
     <color name="colorBackground">#f0ebff</color>
     <color name="colorAccent">#448AFF</color>
-    <color name="textTittle">#B0C4DE</color>
+    <color name="textTittle">#e4e9ef</color>
     <color name="DarkGrey">#49484b</color>
     <color name="LigthGrey">#7e7d80</color>
-    <color name="primary_text_material_light">#100f0f</color>
-    <color name="secondary_text_default_material_light">#8ad02e2e</color>
+    <color name="primary_text_material_light">#3a3838</color>
+    <color name="secondary_text_default_material_light">#8a2e2b2b</color>
+    <color name="primary_text_default_material_light">#de2c2727</color>
+
 </resources>

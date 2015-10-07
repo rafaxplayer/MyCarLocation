@@ -19,13 +19,13 @@ import java.net.URL;
 public class DownloadUrlTask extends AsyncTask<String, Void, String> {
     private Context con;
     private GoogleMap map;
-    private ProgressBar prog;
+
     private static String TAG = DownloadUrlTask.class.getSimpleName();
 
-    public DownloadUrlTask(Context con, GoogleMap map,ProgressBar pro) {
+    public DownloadUrlTask(Context con, GoogleMap map) {
         this.con = con;
         this.map=map;
-        this.prog=pro;
+
     }
 
     // Downloading data in non-ui thread
@@ -48,7 +48,7 @@ public class DownloadUrlTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
 
-        ParserJSONTask parserTask = new ParserJSONTask(map,prog);
+        ParserJSONTask parserTask = new ParserJSONTask(map);
 
         // Invokes the thread for parsing the JSON data
         parserTask.execute(result);

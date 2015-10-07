@@ -1,4 +1,4 @@
-package com.mycarlocation;
+package com.mycarlocation.classes;
 
 import android.app.Activity;
 import android.content.ComponentName;

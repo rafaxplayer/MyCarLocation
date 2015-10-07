@@ -12,21 +12,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cocosw.bottomsheet.BottomSheet;
 import com.firebase.client.Firebase;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
-import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -34,57 +26,53 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.mycarlocation.database.DBHelper;
+import com.mycarlocation.classes.BottomSheetHelper;
+import com.mycarlocation.classes.GlobalUttilities;
+import com.mycarlocation.classes.Installation;
 import com.mycarlocation.polylines.DownloadUrlTask;
 
-import static com.mycarlocation.GlobalUttilities.buildAlertMessageNoGps;
-import static com.mycarlocation.GlobalUttilities.getDate;
-import static com.mycarlocation.GlobalUttilities.getDirectionsUrl;
-import static com.mycarlocation.GlobalUttilities.getLocationString;
-import static com.mycarlocation.GlobalUttilities.limpiarMapa;
-import static com.mycarlocation.GlobalUttilities.mostrarMarcador;
-import static com.mycarlocation.GlobalUttilities.ocultateclado;
-import static com.mycarlocation.GlobalUttilities.setToolBar;
-import static com.mycarlocation.GlobalUttilities.updateLocation;
+import me.drakeet.materialdialog.MaterialDialog;
+
+import static com.mycarlocation.classes.GlobalUttilities.buildAlertMessageNoGps;
+import static com.mycarlocation.classes.GlobalUttilities.getDirectionsUrl;
+import static com.mycarlocation.classes.GlobalUttilities.getLocationString;
+import static com.mycarlocation.classes.GlobalUttilities.limpiarMapa;
+import static com.mycarlocation.classes.GlobalUttilities.mostrarMarcador;
+import static com.mycarlocation.classes.GlobalUttilities.ocultateclado;
+import static com.mycarlocation.classes.GlobalUttilities.setToolBar;
+import static com.mycarlocation.classes.GlobalUttilities.updateLocation;
 
 
-public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, OnConnectionFailedListener, ConnectionCallbacks {
-    private Toolbar toolbar;
+public class MainActivity extends AppCompatActivity implements OnMapReadyCallback {
+
     private static String TAG = MainActivity.class.getSimpleName();
     private SharedPreferences prefs;
     private GoogleMap map;
-    private GoogleApiClient mGoogleApiClient;
+
     private DrawerLayout drawerLayout;
     private Marker marker;
-    private ProgressBar loadprogress;
+
     private SupportMapFragment mapFragment;
-    private DBHelper db;
+
+    private Firebase myFirebaseRef;
+    String ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        Firebase.setAndroidContext(this);
+
+        ID=new Installation().id(this);
+        myFirebaseRef = new Firebase("https://mycarlocation.firebaseio.com/"+ID+"/locations");
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-
         setNavigatorDrawner(navigationView);
-        setToolBar(this, toolbar);
-        loadprogress = (ProgressBar) findViewById(R.id.progressLoad);
+        setToolBar(this,true);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .enableAutoManage(this, 0, this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        db = new DBHelper(getApplicationContext(), DBHelper.TABLE_NAME, null, 1);
+
     }
 
     public void onclick(View v) {
@@ -92,15 +80,36 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             CameraPosition camPos = map.getCameraPosition();
             LatLng coordenadas = camPos.target;
+
             double latitud = coordenadas.latitude;
             double longitud = coordenadas.longitude;
-            String strAdress = getLocationString(getApplicationContext(), latitud, longitud);
+            final String strAdress = getLocationString(getApplicationContext(), latitud, longitud);
             Marker marker = mostrarMarcador(getApplicationContext(), map, latitud, longitud, strAdress, false, R.drawable.ic_location_car);
             this.marker = marker;
-            LatLng loc=marker.getPosition();
-            boolean ret = db.insertLocation(String.valueOf(loc.latitude),String.valueOf(loc.longitude), getDate(),getLocationString(this,loc.latitude, loc.longitude));
-            if(ret)
-                Toast.makeText(getApplicationContext(), "ok saved!", Toast.LENGTH_LONG).show();
+            final LatLng loc=marker.getPosition();
+            updateLocation(loc, map, 19, 45, 60);
+
+            final MaterialDialog materialdialognow = new MaterialDialog(this);
+            materialdialognow.setTitle(getString(R.string.location))
+                    .setMessage(getString(R.string.question_save_location))
+                    .setPositiveButton("OK", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            GlobalUttilities.firebaseSetLocation(getApplicationContext(),loc,myFirebaseRef);
+                            if (materialdialognow != null)
+                                materialdialognow.dismiss();
+                        }
+                    })
+                    .setNegativeButton("CANCEL", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            materialdialognow.dismiss();
+                        }
+                    });
+            materialdialognow.show();
+
+
+
         }
 
     }
@@ -155,8 +164,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     protected void onResume() {
         super.onResume();
-        if(db==null)
-            db = new DBHelper(getApplicationContext(), DBHelper.TABLE_NAME, null, 1);
+
         ocultateclado(this);
 
     }
@@ -164,44 +172,20 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onPause() {
         super.onPause();
-        if(db!=null)
-            db.close();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
-                + connectionResult.getErrorCode());
-
-        // TODO(Developer): Check error code and notify the user of error state and resolution.
-        Toast.makeText(this,
-                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
-                Toast.LENGTH_SHORT).show();
 
     }
 
-    @Override
-    public void onConnected(Bundle bundle) {
 
-    }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (mGoogleApiClient != null)
-            mGoogleApiClient.connect();
+
     }
 
     @Override
     protected void onStop() {
-        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
         super.onStop();
     }
 
@@ -284,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                                         LatLng source = new LatLng(map.getMyLocation().getLatitude(), map.getMyLocation().getLongitude());
                                         updateLocation(marker.getPosition(), map, 19, 45, 60);
                                         String url = getDirectionsUrl(source, marker.getPosition());
-                                        DownloadUrlTask downloadTask = new DownloadUrlTask(MainActivity.this, map, loadprogress);
+                                        DownloadUrlTask downloadTask = new DownloadUrlTask(MainActivity.this, map);
 
                                         downloadTask.execute(url);
 

@@ -5,4 +5,8 @@
     <string name="share_location">Share Car Location</string>
     <string name="delete_location">Delete Location</string>
     <string name="use_navigator">Use Navigator</string>
+
+    <string name="location">Location</string>
+    <string name="question_save_location">You want to save the location of your vehicle at this point?</string>
+    <string name="touch_remove">Touch right to remove items</string>
 </resources>

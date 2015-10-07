@@ -18,12 +18,11 @@ import java.util.List;
 public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
 
     private GoogleMap map;
-    private ProgressBar prog;
+
 
     // Parsing the data in non-ui thread
-    public ParserJSONTask(GoogleMap map, ProgressBar pro) {
-        pro.setVisibility(View.VISIBLE);
-        this.prog = pro;
+    public ParserJSONTask(GoogleMap map) {
+
         this.map = map;
     }
 
@@ -79,8 +78,6 @@ public class ParserJSONTask extends AsyncTask<String, Integer, List<List<HashMap
             map.addPolyline(lineOptions);
         }
 
-        if (prog != null) {
-            prog.setVisibility(View.GONE);
-        }
+
     }
 }

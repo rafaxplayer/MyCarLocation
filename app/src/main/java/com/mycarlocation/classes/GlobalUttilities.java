@@ -1,4 +1,4 @@
-package com.mycarlocation;
+package com.mycarlocation.classes;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,16 +10,12 @@ import android.location.LocationManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,21 +24,29 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.mycarlocation.R;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
 // global uttilities
 public class GlobalUttilities {
     private static String TAG = GlobalUttilities.class.getSimpleName();
 
 
-    public static void setToolBar(AppCompatActivity act, Toolbar toolbar) {
+    public static void setToolBar(AppCompatActivity act, boolean main) {
+        Toolbar toolbar = (Toolbar) act.findViewById(R.id.toolbar);
         if (toolbar != null) {
             act.setSupportActionBar(toolbar);
             act.getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-            act.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+            if(main){
+                act.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
+            }
+
             act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -192,4 +196,24 @@ public class GlobalUttilities {
         return day + "/" + month + "/" + year+" "+hour+":"+min+":"+sec;
     }
 
+    public static void firebaseSetLocation(final Context con,LatLng loc,Firebase myFirebaseRef){
+        final Boolean save=false;
+
+        Map<String,String> map= new HashMap<String, String>();
+        map.put("latitude", String.valueOf(loc.latitude));
+        map.put("longitude", String.valueOf(loc.longitude));
+        map.put("direction", getLocationString(con, loc.latitude, loc.longitude));
+        map.put("date",getDate());
+        myFirebaseRef.push().setValue(map, new Firebase.CompletionListener() {
+
+            @Override
+            public void onComplete(FirebaseError firebaseError, Firebase firebase) {
+                if (firebaseError != null) {
+                    Toast.makeText(con, "Error on saving Loaction", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(con, "Ok Loaction saved", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+    }
 }
