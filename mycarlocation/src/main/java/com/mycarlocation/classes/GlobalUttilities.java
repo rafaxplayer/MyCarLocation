@@ -43,10 +43,9 @@ public class GlobalUttilities {
         if (toolbar != null) {
             act.setSupportActionBar(toolbar);
             act.getSupportActionBar().setIcon(R.mipmap.ic_launcher);
-            if(main){
+            if (main) {
                 act.getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu);
             }
-
             act.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -94,21 +93,19 @@ public class GlobalUttilities {
     }
 
 
-
-
     public static Marker mostrarMarcador(Context con, GoogleMap map, double lat, double lng, String adress, boolean registered, int ico) {
-       Marker marker=null;
+        Marker marker = null;
         try {
-           limpiarMapa(map);
-           marker= map.addMarker(new MarkerOptions()
-                   .position(new LatLng(lat, lng))
-                   .icon(BitmapDescriptorFactory
-                           .fromResource(ico))
-                   .snippet(adress)
-                   .title("Mi coche esta aqui!"));
-       }catch (Exception ex){
-           Log.e("Error", ex.getMessage());
-       }
+            limpiarMapa(map);
+            marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(lat, lng))
+                    .icon(BitmapDescriptorFactory
+                            .fromResource(ico))
+                    .snippet(adress)
+                    .title("Mi coche esta aqui!"));
+        } catch (Exception ex) {
+            Log.e("Error", ex.getMessage());
+        }
         return marker;
     }
 
@@ -150,25 +147,25 @@ public class GlobalUttilities {
         return strAdress;
     }
 
-    public static String getDirectionsUrl(LatLng origin,LatLng dest){
+    public static String getDirectionsUrl(LatLng origin, LatLng dest) {
 
         // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
 
         // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
 
         // Sensor enabled
         String sensor = "sensor=false";
 
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = str_origin + "&" + str_dest + "&" + sensor;
 
         // Output format
         String output = "json";
 
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
 
         return url;
     }
@@ -184,34 +181,34 @@ public class GlobalUttilities {
         }
 
     }
+
     public static String getDate() {
         Calendar cal = Calendar.getInstance();
-
         int day = cal.get(Calendar.DAY_OF_MONTH);
         int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH)+1;
+        int month = cal.get(Calendar.MONTH) + 1;
         int hour = cal.get(Calendar.HOUR);
         int min = cal.get(Calendar.MINUTE);
         int sec = cal.get(Calendar.SECOND);
-        return day + "/" + month + "/" + year+" "+hour+":"+min+":"+sec;
+        return day + "/" + month + "/" + year + " " + hour + ":" + min + ":" + sec;
     }
 
-    public static void firebaseSetLocation(final Context con,LatLng loc,Firebase myFirebaseRef){
-        final Boolean save=false;
+    public static void firebaseSetLocation(final Context con, LatLng loc, Firebase myFirebaseRef) {
+        final Boolean save = false;
 
-        Map<String,String> map= new HashMap<String, String>();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("latitude", String.valueOf(loc.latitude));
         map.put("longitude", String.valueOf(loc.longitude));
         map.put("direction", getLocationString(con, loc.latitude, loc.longitude));
-        map.put("date",getDate());
+        map.put("date", getDate());
         myFirebaseRef.push().setValue(map, new Firebase.CompletionListener() {
 
             @Override
             public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                 if (firebaseError != null) {
-                    Toast.makeText(con, "Error on saving Loaction", Toast.LENGTH_LONG).show();
+                    Toast.makeText(con, "Error on saving Location", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(con, "Ok Loaction saved", Toast.LENGTH_LONG).show();
+                    Toast.makeText(con, "Ok Location saved", Toast.LENGTH_LONG).show();
                 }
             }
         });

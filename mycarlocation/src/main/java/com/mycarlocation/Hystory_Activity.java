@@ -15,11 +15,13 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.Query;
 import com.firebase.client.ValueEventListener;
 import com.mycarlocation.classes.Installation;
 import com.mycarlocation.classes.Location;
@@ -40,6 +42,7 @@ public class Hystory_Activity extends AppCompatActivity {
     private SwipeToDismissTouchListener swipeToDismissTouchListener;
     private SharedPreferences prefs;
     private CoordinatorLayout historycoord;
+    private LinearLayout empty_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class Hystory_Activity extends AppCompatActivity {
         historycoord = (CoordinatorLayout) findViewById(R.id.historycoordinated);
 
         listhistory = (RecyclerView) findViewById(R.id.listhistory);
-
+        empty_view=(LinearLayout)findViewById(R.id.emptyview);
         listhistory.setHasFixedSize(true);
         listhistory.setLayoutManager(new LinearLayoutManager(this));
         listhistory.setItemAnimator(new DefaultItemAnimator());
@@ -80,6 +83,14 @@ public class Hystory_Activity extends AppCompatActivity {
             showEditDialog();
     }
 
+    private void checkAdapterIsEmpty () {
+        if (adapter.getItemCount() == 0) {
+            empty_view.setVisibility(View.VISIBLE);
+        } else {
+            empty_view.setVisibility(View.GONE);
+        }
+    }
+
     private void showEditDialog() {
         FragmentManager fm = getSupportFragmentManager();
         touchTutorial tuto = new touchTutorial();
@@ -96,9 +107,10 @@ public class Hystory_Activity extends AppCompatActivity {
 
     private void getLocations() {
 
-        myFirebaseRef = new Firebase("https://mycarlocation.firebaseio.com/");
-        myFirebaseRef.child(ID + "/locations").addValueEventListener(new ValueEventListener() {
-
+        myFirebaseRef = new Firebase("https://mycarlocation.firebaseio.com/"+ID + "/locations");
+        Query queryRef = myFirebaseRef.orderByChild("date");
+        queryRef.addValueEventListener(new ValueEventListener() {
+            
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Location> locations = new ArrayList<Location>();
@@ -126,6 +138,13 @@ public class Hystory_Activity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         getLocations();
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                checkAdapterIsEmpty();
+            }
+        });
     }
 
     public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
@@ -147,6 +166,7 @@ public class Hystory_Activity extends AppCompatActivity {
 
         @Override
         public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_history, parent, false);
 
             RecyclerAdapter.ViewHolder vh = new RecyclerAdapter.ViewHolder(v);
@@ -174,9 +194,6 @@ public class Hystory_Activity extends AppCompatActivity {
                 public void onComplete(FirebaseError firebaseError, Firebase firebase) {
                     Snackbar.make(historycoord, "Ok Removed location", Snackbar.LENGTH_LONG)
                             .show();
-                    /*Log.e("position remove ", String.valueOf(pos));
-                    Log.e("mDataSet Size ", String.valueOf(getItemCount()));
-                    Log.e("Location id ", id);*/
 
                 }
             });
@@ -205,6 +222,7 @@ public class Hystory_Activity extends AppCompatActivity {
 
             }
         }
+        private static final int EMPTY_VIEW = 10;
     }
 
 }

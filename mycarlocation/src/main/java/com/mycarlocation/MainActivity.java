@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private DrawerLayout drawerLayout;
     private Marker marker;
-
+    private ActionBarDrawerToggle mDrawerToggle;
     private SupportMapFragment mapFragment;
 
     private Firebase myFirebaseRef;
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             Marker marker = mostrarMarcador(getApplicationContext(), map, latitud, longitud, strAdress, false, R.drawable.ic_location_car);
             this.marker = marker;
             final LatLng loc=marker.getPosition();
+
             updateLocation(loc, map, 19, 45, 60);
 
             final MaterialDialog materialdialognow = new MaterialDialog(this);
@@ -107,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         }
                     });
             materialdialognow.show();
-
-
 
         }
 
